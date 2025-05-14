@@ -6,6 +6,15 @@ import Player from './components/Player.vue'
 import PageTransition from './components/PageTransition.vue'
 import { useMusicStore } from './stores/music'
 import { onMounted } from 'vue'
+import {
+  HeartIcon,
+  BackwardIcon,
+  PlayIcon,
+  PauseIcon,
+  ForwardIcon,
+  SpeakerWaveIcon,
+  ArrowPathIcon
+} from '@heroicons/vue/24/outline'
 
 const store = useMusicStore()
 
@@ -19,29 +28,37 @@ onMounted(() => {
 </script>
 
 <template>
-  <div class="h-screen bg-spotify-black text-white flex">
+  <div class="h-screen bg-spotify-black text-white flex flex-col md:flex-row overflow-hidden" style="width: 202%;">
     <!-- Sidebar -->
-    <Sidebar class="w-64" />
+    <Sidebar class="w-full md:w-64 flex-shrink-0" />
 
     <!-- Main Content -->
-    <div class="flex-1 flex flex-col">
+    <div class="flex-1 flex flex-col min-h-0">
       <!-- Navbar -->
-      <Navbar class="h-16" />
+      <Navbar class="h-16 flex-shrink-0" />
 
       <!-- Content Area -->
-      <main class="flex-1 overflow-y-auto p-6">
+      <main class="flex-1 overflow-y-auto p-2 md:p-6 min-h-0">
         <PageTransition>
           <router-view />
         </PageTransition>
       </main>
 
       <!-- Player -->
-      <Player class="h-24" />
+      <div class="sticky bottom-0 left-0 w-full z-50">
+        <Player class="h-20 md:h-24" />
+      </div>
     </div>
   </div>
 </template>
 
 <style scoped>
+html, body, #app {
+  height: 100%;
+  margin: 0;
+  padding: 0;
+}
+
 header {
   line-height: 1.5;
   max-height: 100vh;

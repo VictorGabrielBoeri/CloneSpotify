@@ -27,6 +27,7 @@
         v-model:tracks="playlist.tracks"
         :show-remove="true"
         @remove="removeTrack"
+        @play="store.play"
       />
     </section>
 

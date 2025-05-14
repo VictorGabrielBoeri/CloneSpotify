@@ -78,13 +78,8 @@ export const getArtist = async id => {
 }
 
 export const getAlbum = async id => {
-  try {
-    const response = await api.get(`/album/${id}`)
-    return response.data
-  } catch (error) {
-    console.error('Erro ao buscar álbum:', error)
-    return null
-  }
+  const response = await api.get(`/album/${id}`)
+  return response.data
 }
 
 function formatDuration(seconds) {

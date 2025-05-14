@@ -33,20 +33,20 @@
     <!-- Albums -->
     <section v-if="artist?.albums?.length">
       <h2 class="text-2xl font-bold mb-4">Álbuns</h2>
-      <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4">
+      <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4">
         <div
           v-for="album in artist.albums"
           :key="album.id"
-          class="bg-spotify-gray p-4 rounded-lg hover:bg-opacity-80 transition-all cursor-pointer"
+          class="bg-spotify-gray p-4 rounded-lg hover:bg-opacity-80 transition-all cursor-pointer flex flex-col items-center"
           @click="goToAlbum(album.id)"
         >
           <img
-            :src="album.cover_medium"
+            :src="album.cover_medium || 'https://placehold.co/160x160?text=No+Image'"
             :alt="album.title"
-            class="w-full aspect-square rounded-lg shadow-lg mb-4"
+            class="w-full aspect-square rounded-lg shadow-lg mb-4 object-cover"
           />
-          <h3 class="font-medium">{{ album.title }}</h3>
-          <p class="text-sm text-spotify-light-gray">{{ album.release_date.split('-')[0] }}</p>
+          <h3 class="font-medium text-center w-full truncate">{{ album.title }}</h3>
+          <p class="text-sm text-spotify-light-gray text-center w-full truncate">{{ album.release_date.split('-')[0] }}</p>
         </div>
       </div>
     </section>

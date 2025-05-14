@@ -22,10 +22,10 @@
           @click="playSong(track)"
         >
           <span class="text-spotify-light-gray w-8">{{ index + 1 }}</span>
-          <img :src="album.cover_medium" :alt="track.title" class="w-12 h-12 rounded" />
-          <div class="flex-1">
-            <h3 class="font-medium">{{ track.title }}</h3>
-            <p class="text-sm text-spotify-light-gray">{{ track.artist.name }}</p>
+          <img :src="album.cover_medium || 'https://placehold.co/56x56?text=No+Image'" :alt="track.title" class="w-12 h-12 rounded object-cover" />
+          <div class="flex-1 min-w-0">
+            <h3 class="font-medium truncate">{{ track.title }}</h3>
+            <p class="text-sm text-spotify-light-gray truncate">{{ track.artist.name }}</p>
           </div>
           <span class="text-sm text-spotify-light-gray">{{ formatDuration(track.duration) }}</span>
         </div>

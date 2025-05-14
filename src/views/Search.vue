@@ -25,16 +25,16 @@
           <div
             v-for="artist in artists.data"
             :key="artist.id"
-            class="bg-spotify-gray p-4 rounded-lg hover:bg-opacity-80 transition-all cursor-pointer"
+            class="bg-spotify-gray p-4 rounded-lg hover:bg-opacity-80 transition-all cursor-pointer flex flex-col items-center"
             @click="goToArtist(artist.id)"
           >
             <img
-              :src="artist.image"
+              :src="artist.image || 'https://placehold.co/160x160?text=No+Image'"
               :alt="artist.name"
-              class="w-full aspect-square rounded-full shadow-lg mb-4"
+              class="w-full aspect-square rounded-full shadow-lg mb-4 object-cover"
             />
-            <h3 class="font-medium">{{ artist.name }}</h3>
-            <p class="text-sm text-spotify-light-gray">Artista</p>
+            <h3 class="font-medium text-center w-full truncate">{{ artist.name }}</h3>
+            <p class="text-sm text-spotify-light-gray text-center w-full truncate">Artista</p>
           </div>
         </div>
         <div
@@ -57,16 +57,16 @@
           <div
             v-for="album in albums.data"
             :key="album.id"
-            class="bg-spotify-gray p-4 rounded-lg hover:bg-opacity-80 transition-all cursor-pointer"
+            class="bg-spotify-gray p-4 rounded-lg hover:bg-opacity-80 transition-all cursor-pointer flex flex-col items-center"
             @click="goToAlbum(album.id)"
           >
             <img
-              :src="album.image"
+              :src="album.image || 'https://placehold.co/160x160?text=No+Image'"
               :alt="album.name"
-              class="w-full aspect-square rounded-lg shadow-lg mb-4"
+              class="w-full aspect-square rounded-lg shadow-lg mb-4 object-cover"
             />
-            <h3 class="font-medium">{{ album.name }}</h3>
-            <p class="text-sm text-spotify-light-gray">{{ album.artist }}</p>
+            <h3 class="font-medium text-center w-full truncate">{{ album.name }}</h3>
+            <p class="text-sm text-spotify-light-gray text-center w-full truncate">{{ album.artist }}</p>
           </div>
         </div>
         <div
@@ -83,7 +83,7 @@
       <!-- Songs -->
       <section v-if="songs.data.length">
         <h2 class="text-2xl font-bold mb-4">Músicas</h2>
-        <TrackList :tracks="songs.data" />
+        <TrackList :tracks="songs.data" @play="store.play" />
         <div
           v-if="songs.data.length < songs.total"
           class="text-center mt-4"
@@ -99,20 +99,18 @@
     <!-- Browse Categories -->
     <div v-else>
       <h2 class="text-2xl font-bold mb-4">Navegar por categorias</h2>
-      <div
-        class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4"
-      >
+      <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4">
         <div
           v-for="category in categories"
           :key="category.id"
-          class="bg-spotify-gray p-4 rounded-lg hover:bg-opacity-80 transition-all cursor-pointer"
+          class="bg-spotify-gray p-4 rounded-lg hover:bg-opacity-80 transition-all cursor-pointer flex flex-col items-center"
         >
           <img
-            :src="category.image"
+            :src="category.picture || 'https://placehold.co/160x160?text=No+Image'"
             :alt="category.name"
-            class="w-full aspect-square rounded-lg shadow-lg mb-4"
+            class="w-full aspect-square rounded-lg shadow-lg mb-4 object-cover"
           />
-          <h3 class="font-medium">{{ category.name }}</h3>
+          <h3 class="font-medium text-center w-full truncate">{{ category.name }}</h3>
         </div>
       </div>
     </div>
@@ -125,6 +123,7 @@ import { useRouter } from 'vue-router'
 import { MagnifyingGlassIcon } from '@heroicons/vue/24/outline'
 import { searchMusic } from '../services/api'
 import TrackList from '../components/TrackList.vue'
+import axios from 'axios'
 
 const router = useRouter()
 
@@ -132,13 +131,7 @@ const searchQuery = ref('')
 const artists = ref({ data: [], total: 0 })
 const albums = ref({ data: [], total: 0 })
 const songs = ref({ data: [], total: 0 })
-const categories = ref([
-  { id: 1, name: 'Pop', image: 'https://via.placeholder.com/160' },
-  { id: 2, name: 'Rock', image: 'https://via.placeholder.com/160' },
-  { id: 3, name: 'Hip Hop', image: 'https://via.placeholder.com/160' },
-  { id: 4, name: 'Eletrônica', image: 'https://via.placeholder.com/160' },
-  { id: 5, name: 'MPB', image: 'https://via.placeholder.com/160' }
-])
+const categories = ref([])
 
 const artistsObserver = ref(null)
 const albumsObserver = ref(null)
@@ -195,7 +188,11 @@ function goToAlbum(id) {
   router.push(`/album/${id}`)
 }
 
-onMounted(() => {
+onMounted(async () => {
+  const response = await axios.get('https://cors-anywhere.herokuapp.com/https://api.deezer.com/genre')
+  // Remove o primeiro item (geralmente é "All" sem imagem)
+  categories.value = response.data.data.slice(1)
+
   const options = {
     root: null,
     rootMargin: '0px',

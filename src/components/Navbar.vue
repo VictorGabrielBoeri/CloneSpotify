@@ -2,10 +2,10 @@
   <nav class="bg-spotify-gray bg-opacity-95 px-6 flex items-center justify-between">
     <!-- Navigation Controls -->
     <div class="flex items-center space-x-4">
-      <button class="p-2 rounded-full bg-black bg-opacity-70 hover:bg-opacity-100">
+      <button @click="goBack" class="p-2 rounded-full bg-black bg-opacity-70 hover:bg-opacity-100">
         <ChevronLeftIcon class="w-5 h-5" />
       </button>
-      <button class="p-2 rounded-full bg-black bg-opacity-70 hover:bg-opacity-100">
+      <button @click="goForward" class="p-2 rounded-full bg-black bg-opacity-70 hover:bg-opacity-100">
         <ChevronRightIcon class="w-5 h-5" />
       </button>
     </div>
@@ -17,9 +17,11 @@
           class="w-5 h-5 absolute left-3 top-1/2 transform -translate-y-1/2 text-spotify-light-gray"
         />
         <input
+          v-model="searchStore.query"
           type="text"
           placeholder="O que você quer ouvir?"
           class="w-full bg-white bg-opacity-10 rounded-full py-2 pl-10 pr-4 text-white placeholder-spotify-light-gray focus:outline-none focus:bg-opacity-20"
+          @keyup.enter="goToSearch"
         />
       </div>
     </div>
@@ -45,4 +47,23 @@ import {
   UserCircleIcon,
   ChevronDownIcon,
 } from '@heroicons/vue/24/outline'
+import { useRouter } from 'vue-router'
+import { useSearchStore } from '../stores/search'
+
+const router = useRouter()
+const searchStore = useSearchStore()
+
+function goBack() {
+  router.back()
+}
+
+function goForward() {
+  router.forward()
+}
+
+function goToSearch() {
+  if (searchStore.query.trim()) {
+    router.push('/search')
+  }
+}
 </script>
